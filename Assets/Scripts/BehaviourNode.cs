@@ -14,9 +14,9 @@ public class DistanceCondition : BehaviourNode
 
     public DistanceCondition(Transform bot, Transform player, float distanceThreshold)
     {
-        this._bot = bot;
-        this._player = player;
-        this._distanceThreshold = distanceThreshold;
+        _bot = bot;
+        _player = player;
+        _distanceThreshold = distanceThreshold;
     }
 
     public override bool Execute()
@@ -29,40 +29,40 @@ public class DistanceCondition : BehaviourNode
 
 public class MoveTowardsPlayer : BehaviourNode
 {
-    Transform bot;
-    Transform player;
-    float speed;
-    float moveDistance;  
-    Vector3 startPosition;
-    bool isMoving;
+    private Transform _bot;
+    private Transform _player;
+    private float _speed;
+    private float _moveDistance;  
+    private Vector3 _startPosition;
+    private bool _isMoving;
 
     public MoveTowardsPlayer(Transform bot, Transform player, float speed, float moveDistance)
     {
-        this.bot = bot;
-        this.player = player;
-        this.speed = speed;
-        this.moveDistance = moveDistance;
-        isMoving = false;
+        _bot = bot;
+        _player = player;
+        _speed = speed;
+        _moveDistance = moveDistance;
+        _isMoving = false;
     }
 
     public override bool Execute()
     {
-        if (!isMoving)
+        if (!_isMoving)
         {
-            startPosition = bot.position;
-            isMoving = true;
+            _startPosition = _bot.position;
+            _isMoving = true;
         }
         
-        Vector3 direction = (player.position - bot.position).normalized;
+        Vector3 direction = (_player.position - _bot.position).normalized;
         direction.y = 0;
         
-        bot.Translate(direction * speed * Time.deltaTime, Space.World);
+        _bot.Translate(direction * _speed * Time.deltaTime, Space.World);
         
-        float distanceMoved = Vector3.Distance(startPosition, bot.position);
+        float distanceMoved = Vector3.Distance(_startPosition, _bot.position);
 
-        if (distanceMoved >= moveDistance)
+        if (distanceMoved >= _moveDistance)
         {
-            isMoving = false;
+            _isMoving = false;
             return true;  
         }
 
@@ -72,40 +72,40 @@ public class MoveTowardsPlayer : BehaviourNode
 
 public class MoveAwayFromPlayer : BehaviourNode
 {
-    Transform bot;
-    Transform player;
-    float speed;
-    float moveDistance;  
-    Vector3 startPosition;
-    bool isMoving;
+    private Transform _bot;
+    private Transform _player;
+    private float _speed;
+    private float _moveDistance;  
+    private Vector3 _startPosition;
+    private bool _isMoving;
 
     public MoveAwayFromPlayer(Transform bot, Transform player, float speed, float moveDistance)
     {
-        this.bot = bot;
-        this.player = player;
-        this.speed = speed;
-        this.moveDistance = moveDistance;
-        isMoving = false;
+        _bot = bot;
+        _player = player;
+        _speed = speed;
+        _moveDistance = moveDistance;
+        _isMoving = false;
     }
 
     public override bool Execute()
     {
-        if (!isMoving)
+        if (!_isMoving)
         {
-            startPosition = bot.position;
-            isMoving = true;
+            _startPosition = _bot.position;
+            _isMoving = true;
         }
         
-        Vector3 direction = (bot.position - player.position).normalized;
+        Vector3 direction = (_bot.position - _player.position).normalized;
         direction.y = 0;
         
-        bot.Translate(direction * speed * Time.deltaTime, Space.World);
+        _bot.Translate(direction * _speed * Time.deltaTime, Space.World);
         
-        float distanceMoved = Vector3.Distance(startPosition, bot.position);
+        float distanceMoved = Vector3.Distance(_startPosition, _bot.position);
 
-        if (distanceMoved >= moveDistance)
+        if (distanceMoved >= _moveDistance)
         {
-            isMoving = false;
+            _isMoving = false;
             return true;  
         }
 
@@ -116,16 +116,16 @@ public class MoveAwayFromPlayer : BehaviourNode
 // Узел-последователь (Sequence) для последовательных действий
 public class SequenceNode : BehaviourNode
 {
-    private BehaviourNode[] nodes;
+    private BehaviourNode[] _nodes;
 
     public SequenceNode(params BehaviourNode[] nodes)
     {
-        this.nodes = nodes;
+        _nodes = nodes;
     }
 
     public override bool Execute()
     {
-        foreach (var node in nodes)
+        foreach (var node in _nodes)
         {
             if (!node.Execute())
                 return false;  
